@@ -1,0 +1,8 @@
+{
+  "name": "Home Screens",
+  "description": "Control a self-hosted Home Screens smart display from Home Assistant.",
+  "render_readme": true,
+  "domains": ["light", "select", "switch", "button", "sensor"],
+  "iot_class": "local_polling",
+  "homeassistant": "2024.1.0"
+}

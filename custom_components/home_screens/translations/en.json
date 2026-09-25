@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Home Screens",
+        "data": {
+          "host": "Host / IP address",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the Home Screens API at that host/port."
+    },
+    "abort": {
+      "already_configured": "This Home Screens instance is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "host": "Host / IP address",
+          "port": "Port",
+          "scan_interval": "Poll interval (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "light": {
+      "display": { "name": "Display" }
+    },
+    "select": {
+      "screen": { "name": "Screen" },
+      "profile": { "name": "Profile" }
+    },
+    "sensor": {
+      "display_state": { "name": "Display state" },
+      "current_screen": { "name": "Current screen" }
+    }
+  }
+}

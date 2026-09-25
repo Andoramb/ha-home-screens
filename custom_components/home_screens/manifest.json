@@ -1,0 +1,11 @@
+{
+  "domain": "home_screens",
+  "name": "Home Screens",
+  "codeowners": ["@Andoramb"],
+  "config_flow": true,
+  "documentation": "https://github.com/Andoramb/ha-home-screens",
+  "issue_tracker": "https://github.com/Andoramb/ha-home-screens/issues",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "version": "0.1.0"
+}

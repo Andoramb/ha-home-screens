@@ -1,0 +1,63 @@
+alert:
+  name: Send alert
+  description: Show an alert/message overlay on the Home Screens display.
+  fields:
+    title:
+      name: Title
+      required: true
+      selector:
+        text:
+    message:
+      name: Message
+      required: true
+      selector:
+        text:
+    type:
+      name: Type
+      default: info
+      selector:
+        select:
+          options:
+            - info
+            - warning
+            - urgent
+    duration:
+      name: Duration (ms)
+      description: 0 keeps the alert until dismissed.
+      default: 15000
+      selector:
+        number:
+          min: 0
+          max: 120000
+          step: 1000
+    wake:
+      name: Wake display
+      default: true
+      selector:
+        boolean:
+
+clear_alerts:
+  name: Clear alerts
+  description: Dismiss any active alerts on the display.
+
+sleep_override:
+  name: Keep awake
+  description: Hold off the sleep/dim schedule for N minutes.
+  fields:
+    minutes:
+      name: Minutes
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 1440
+
+goto_screen:
+  name: Go to screen
+  description: Jump to a screen by name or id.
+  fields:
+    screen:
+      name: Screen
+      required: true
+      selector:
+        text:
