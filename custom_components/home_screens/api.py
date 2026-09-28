@@ -118,47 +118,17 @@ class HomeScreensClient:
     async def module_command(self, module: str, action: str) -> None:
         await self._post("/api/display/module-command", {"module": module, "action": action})
 
-    # -- config-file writes (module show/hide) --------------------------
-
-    async def get_config_with_revision(self) -> tuple[dict, str | None]:
-        async with self._session.get(
-            f"{self._base}/api/config", headers=self._headers(), timeout=aiohttp.ClientTimeout(total=10)
-        ) as resp:
-            if resp.status != 200:
-                raise HomeScreensApiError(f"GET /api/config -> {resp.status}")
-            revision = resp.headers.get("X-Config-Revision")
-            raw = await resp.read()
-            return _loads(raw), revision
-
-    async def put_config(self, config: dict, revision: str | None) -> None:
-        headers = self._headers()
-        if revision:
-            headers["X-Config-Revision"] = revision
-        async with self._session.put(
-            f"{self._base}/api/config",
-            headers=headers,
-            json=config,
-            timeout=aiohttp.ClientTimeout(total=10),
-        ) as resp:
-            if resp.status != 200:
-                raise HomeScreensApiError(f"PUT /api/config -> {resp.status}")
+    # -- module show/hide ------------------------------------------------
 
     async def set_module_enabled(self, module_id: str, enabled: bool) -> None:
-        """Read-modify-write the config to flip one module's `enabled` flag.
+        """Show or hide one module via POST /api/display/module-enabled.
 
-        Uses the X-Config-Revision compare-and-swap header so a concurrent
-        editor save can't be clobbered (mirrors scripts/hs_module.py).
+        Display-token authorized, atomic on the server, and requires no
+        editor session — unlike the old PUT /api/config workaround. Needs a
+        Home Screens nightly build that includes this verb (added upstream
+        2026-09-25).
         """
-        config, revision = await self.get_config_with_revision()
-        found = False
-        for screen in config.get("screens", []):
-            for module in screen.get("modules", []):
-                if module.get("id") == module_id:
-                    module["enabled"] = enabled
-                    found = True
-        if not found:
-            raise HomeScreensApiError(f"Unknown module id: {module_id}")
-        await self.put_config(config, revision)
+        await self._post("/api/display/module-enabled", {"moduleId": module_id, "enabled": enabled})
 
 
 def _loads(raw: bytes) -> Any:

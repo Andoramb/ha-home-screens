@@ -4,9 +4,11 @@ DOMAIN = "home_screens"
 
 CONF_HOST = "host"
 CONF_PORT = "port"
+CONF_NAME = "name"
 CONF_SCAN_INTERVAL = "scan_interval"
 
 DEFAULT_PORT = 3000
+DEFAULT_NAME = "Home Screens"
 DEFAULT_SCAN_INTERVAL = 30
 
 ATTR_SCREEN = "screen"

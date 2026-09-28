@@ -5,7 +5,8 @@
         "title": "Connect to Home Screens",
         "data": {
           "host": "Host / IP address",
-          "port": "Port"
+          "port": "Port",
+          "name": "Name"
         }
       }
     },
@@ -22,6 +23,7 @@
         "data": {
           "host": "Host / IP address",
           "port": "Port",
+          "name": "Name",
           "scan_interval": "Poll interval (seconds)"
         }
       }

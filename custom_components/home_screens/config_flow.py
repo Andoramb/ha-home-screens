@@ -11,7 +11,16 @@ from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import HomeScreensApiError, HomeScreensClient
-from .const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL, DEFAULT_PORT, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import (
+    CONF_HOST,
+    CONF_NAME,
+    CONF_PORT,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_NAME,
+    DEFAULT_PORT,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,6 +35,7 @@ class HomeScreensConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             host = user_input[CONF_HOST].strip()
             port = user_input[CONF_PORT]
+            name = user_input[CONF_NAME].strip() or DEFAULT_NAME
             session = async_get_clientsession(self.hass)
             client = HomeScreensClient(session, host, port)
             try:
@@ -36,8 +46,8 @@ class HomeScreensConfigFlow(ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(f"{host}:{port}")
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
-                    title=f"Home Screens ({host})",
-                    data={CONF_HOST: host, CONF_PORT: port},
+                    title=name,
+                    data={CONF_HOST: host, CONF_PORT: port, CONF_NAME: name},
                     options={CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL},
                 )
 
@@ -47,6 +57,7 @@ class HomeScreensConfigFlow(ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_HOST): str,
                     vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
+                    vol.Required(CONF_NAME, default=DEFAULT_NAME): str,
                 }
             ),
             errors=errors,
@@ -66,11 +77,14 @@ class HomeScreensOptionsFlow(OptionsFlow):
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> Any:
         if user_input is not None:
+            name = user_input[CONF_NAME].strip() or DEFAULT_NAME
             self.hass.config_entries.async_update_entry(
                 self.config_entry,
+                title=name,
                 data={
                     CONF_HOST: user_input[CONF_HOST].strip(),
                     CONF_PORT: user_input[CONF_PORT],
+                    CONF_NAME: name,
                 },
             )
             return self.async_create_entry(
@@ -83,6 +97,9 @@ class HomeScreensOptionsFlow(OptionsFlow):
                 {
                     vol.Required(CONF_HOST, default=self.config_entry.data[CONF_HOST]): str,
                     vol.Required(CONF_PORT, default=self.config_entry.data[CONF_PORT]): int,
+                    vol.Required(
+                        CONF_NAME, default=self.config_entry.data.get(CONF_NAME, self.config_entry.title)
+                    ): str,
                     vol.Required(
                         CONF_SCAN_INTERVAL,
                         default=self.config_entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),

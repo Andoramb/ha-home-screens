@@ -43,22 +43,26 @@ Copy `custom_components/home_screens` into your Home Assistant `config/custom_co
 ## Setup
 
 Settings → Devices & Services → Add Integration → "Home Screens" → enter the
-display's host/IP and port (default `3000`).
+display's host/IP, port (default `3000`), and a name for the device (default
+`Home Screens`). The name becomes the device name and prefixes every entity
+— it no longer bakes the IP into entity IDs.
 
 If the target instance has a password set (Settings → On your phone → "Ask
-for a password" in Home Screens), module show/hide (`PUT /api/config`)
-requires a signed-in session rather than a display token and is not yet
-supported by this integration — everything else (`/api/display/*`) works
-with a bearer token, which is not yet wired into the config flow. Track
-this in issues if you need it.
+for a password" in Home Screens), a bearer token isn't yet wired into the
+config flow, so authenticated instances aren't supported yet. Track this in
+issues if you need it.
 
 ## Notes on module show/hide
 
-Home Screens has no dedicated REST verb for toggling a module's visibility
-— it's a `enabled` flag on the module instance inside the config document
-(`PUT /api/config`). This integration does a safe read → flip → write using
-the `X-Config-Revision` header as a compare-and-swap, so it won't clobber a
-concurrent edit made in the Home Screens editor.
+Requires a Home Screens **nightly build** — `POST /api/display/module-enabled`
+was added upstream on 2026-09-25 and isn't in a stable release yet. It shows
+or hides a module by id with just the display token, atomically, with no
+editor session required.
+
+Before that endpoint existed, this integration did a read → flip → write of
+the whole config document via `PUT /api/config` (which needs a full editor
+session once a password is set, and races the editor's own autosave). That
+path has been removed now that the dedicated verb exists.
 
 ## License
 
