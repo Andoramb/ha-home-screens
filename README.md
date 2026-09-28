@@ -64,6 +64,15 @@ the whole config document via `PUT /api/config` (which needs a full editor
 session once a password is set, and races the editor's own autosave). That
 path has been removed now that the dedicated verb exists.
 
+## Brand icon
+
+The integration icon (in Settings → Devices & Services, device pages, etc.)
+comes from `custom_components/home_screens/brand/icon.png`. Since Home
+Assistant 2026.3, custom integrations self-serve brand images this way — no
+PR to the `home-assistant/brands` repo needed, and no separate step for
+HACS either (it reads the same `brand/` directory). A previous root-level
+`icon.png` copy was removed since it wasn't the documented location.
+
 ## License
 
 MIT
