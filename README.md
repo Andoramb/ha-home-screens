@@ -15,7 +15,7 @@ dependencies.
 | `light.<name>_display` | On/off = wake/sleep, brightness = display brightness (0-100 mapped to HA's 0-255) |
 | `select.<name>_screen` | Jump to any screen by name |
 | `select.<name>_profile` | Switch active profile (`none` = show everything) |
-| `switch.<name>_<module>` | One per module instance across every screen — show/hide that widget |
+| `switch.<name>_<screen>_<module type>` | One per module instance across every screen — show/hide that widget. e.g. `switch.home_screens_cameras_weather` for the weather module on the "Cameras" screen. A title is appended only to disambiguate two modules of the same type on the same screen. |
 | `button.<name>_next_screen` / `prev_screen` | Screen navigation |
 | `button.<name>_clear_alerts` | Dismiss active alerts |
 | `sensor.<name>_display_state` | `active` / `dimmed` / `asleep` |

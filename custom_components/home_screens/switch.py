@@ -54,11 +54,29 @@ class HomeScreensModuleSwitch(HomeScreensEntity, SwitchEntity):
 
     @property
     def name(self) -> str:
+        """`<screen> <module type>`, e.g. "Cameras Weather" -> switch.home_screens_cameras_weather.
+
+        Screen comes first (matches how Home Screens itself groups modules
+        under a screen) and the module type is the systematic part; a title
+        is only appended when needed to tell apart two modules of the same
+        type on the same screen.
+        """
         module = self._module()
         if module is None:
             return self._module_id
-        label = module.get("title") or module.get("type") or self._module_id
-        return f"{label} ({module.get('screen_name')})" if module.get("screen_name") else label
+
+        screen = module.get("screen_name") or "screen"
+        label = module.get("type") or module.get("title") or self._module_id
+        name = f"{screen} {label}"
+
+        siblings = [
+            m
+            for m in self.coordinator.modules()
+            if m.get("screen_name") == module.get("screen_name") and m.get("type") == module.get("type")
+        ]
+        if len(siblings) > 1 and module.get("title"):
+            name = f"{name} {module['title']}"
+        return name
 
     @property
     def is_on(self) -> bool:
